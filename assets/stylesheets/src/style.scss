@@ -39,6 +39,14 @@ body{
       font-size:8vmin;
       font-weight:100;
       line-height:$key_height;
+      
+
+      &:hover {
+        background-color: darken(#434343, 5%);
+      }
+      &:active {
+        background-color: darken(#434343, 10%);
+      }
     }
   }
 
