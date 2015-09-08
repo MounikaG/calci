@@ -8,6 +8,9 @@ body {
   top: 50%;
   transform: translaterY(-50%);
   margin: 0 auto; }
+  #calculator ::selection {
+    background-color: transparent;
+    color: inherit; }
   #calculator #result {
     text-align: right;
     padding-right: 2vmin;

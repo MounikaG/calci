@@ -1,4 +1,4 @@
-vvar Calci = {
+var Calci = {
   init: function() {
     $('#calculator .input').click(function(){
       if(this.dataset.keyType == "digit") {
@@ -20,15 +20,20 @@ vvar Calci = {
     Calci.handleInput(digit);
   });
  });
+    $(document).bind('keyup', 'backspace', function() {
+     Calci.handleDelete();
+    });
+  },
     handleInput:function(input) {
       $('#preview').html($('#preview').html() + input);
     },
     handleDelete: function() {
-      $('#preview').html($('#preview').).html().slice(0, -1));
+      $('#preview').html($('#preview').html().slice(0, -1));
     },
     evaluateResult: function() {
       $('#result').html(eval($('#preview').html()));
-    };
+    },
+}
 
   $(document).ready(function() {
     Calci.init();
