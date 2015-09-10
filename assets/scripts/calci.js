@@ -4,7 +4,7 @@ var Calci = {
       if(this.dataset.keyType == "digit") {
         Calci.handleInput(this.dataset.digit);
       } else if (this.dataset.keyType == "operator") {
-        Calci.handleInput(this.dataset.operator);
+        Calci.handleOperator(this.dataset.operator);
       } else if (this.dataset.keyType == "delete") {
         Calci.handleDelete();
       } else if (this.dataset.keyType == "equals") {
@@ -14,16 +14,30 @@ var Calci = {
     $('#calculator #delete').dblclick(function() {
      Calci.clearResult();
     });
-    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '/', '*','+', '-', '.'].forEach(function(digit){
+    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].forEach(function(digit){
   $(document).bind('keyup', digit, function() {
     Calci.handleInput(digit);
   });
  });
+    ['/', '*', '+', '-'].forEach(function(digit){
+      $(document).bind('keyup', digit, function(){
+        Calci.handleOperator(digit);
+      });
+    });
+    $(document).bind('keyup', '.', function() {
+     lastNumber = Calci.getLastNumber();
+     if(lastNumber.indexOf('.') == -1){
+      if(lastNumber.length == 0) {
+        Calci.handleInput(0);
+      }
+      Calci.handleInput('.');
+     }
+    });
     $(document).bind('keyup', 'backspace', function() {
      Calci.handleDelete();
     });
-     $(document).bind('keyup', 'shift+=', function() {
-     Calci.handleInput('+');
+    $(document).bind('keyup', 'shift+=', function(){
+      Calci.handleOperator('+');
     });
       ['=', 'return'].forEach(function(key){
         $(document).bind('keyup', key, function() {
@@ -33,6 +47,19 @@ var Calci = {
   },
     handleInput:function(input) {
       $('#preview').html($('#preview').html() + input);
+    },
+    handleOperator: function(operator) {
+      if($('#preview').html().length == 0) {
+        if (operator == '-') {
+          Calci.handleInput('-');
+        }
+      }else {
+        lastChar = Calci.getLastChar();
+         if (['+', '-', '*', '/'].indexOf(lastChar) != -1) {
+          Calci.handleDelete();
+         }
+        Calci.handleInput(operator);
+      }
     },
     handleDelete: function() {
       $('#preview').html($('#preview').html().slice(0, -1));
@@ -45,10 +72,28 @@ var Calci = {
     },
     clearResult: function() {
       $('#result').html('');
+    },
+    getLastNumber: function() {
+      str = $('#preview').html();
+      regexp = /[+\-*\/]([0-9.])*$/
+      matches = str.match(regexp);
+      if(matches == null) {
+        return str;
+      }else {
+        return matches[0].slice(1);
+      }
+    },
+    getLastChar: function() {
+      str = $('#preview').html();
+      if (str.length == 0) {
+        return str;
+      } else {
+        return str[str.length - 1];
+      }
     }
-};
+  };
 
-  $(document).ready(function() {
+  $(document).ready(function(){
     Calci.init();
   });
 
